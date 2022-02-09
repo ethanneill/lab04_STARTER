@@ -1,6 +1,7 @@
 // intbst.cpp
 // Implements class IntBST
-// YOUR NAME(S), DATE
+// Ethan Neill  Perm #: 4178315
+// Omar Sanchez Perm #: 
 
 #include "intbst.h"
 
@@ -78,7 +79,11 @@ void IntBST::printInOrder() const {
     printInOrder(root);
 }
 void IntBST::printInOrder(Node *n) const {
-    // IMPLEMENT HERE
+    if(n){
+        printInOrder(n->left);
+        cout<<n->info<<" ";
+        printInOrder(n->right);
+    }
 }
 
 // prints tree data post-order, with helper
@@ -87,7 +92,11 @@ void IntBST::printPostOrder() const {
 }
 
 void IntBST::printPostOrder(Node *n) const {
-    // IMPLEMENT HERE
+    if(n){
+        printPostOrder(n->right);
+        cout<<n->info<<" ";
+        printPostOrder(n->left);
+    }
 }
 
 // return sum of values in tree
@@ -97,7 +106,12 @@ int IntBST::sum() const {
 
 // recursive helper for sum
 int IntBST::sum(Node *n) const {
-    return 0; // REPLACE THIS NON-SOLUTION
+    if(n){
+        return n->info + sum(n->left) + sum(n->right);
+    }
+    else{
+        return 0;
+    }
 }
 
 // return count of values
@@ -107,7 +121,12 @@ int IntBST::count() const {
 
 // recursive helper for count
 int IntBST::count(Node *n) const {
-    return 0; // REPLACE THIS NON-SOLUTION
+    if(n){
+        return 1 + count(n->left) + count(n->right);
+    }
+    else{
+        return 0;
+    }
 }
 
 // IMPLEMENT THIS FIRST: returns the node for a given value or NULL if none exists
@@ -117,36 +136,153 @@ int IntBST::count(Node *n) const {
 // Whenever you call this method from somewhere else, pass it
 // the root node as "n"
 IntBST::Node* IntBST::getNodeFor(int value, Node* n) const{
-    return NULL; // REPLACE THIS NON-SOLUTION
+    if(n){
+        if(n->info == value){
+            return n;
+        }
+        else if(n->info >= value){
+            getNodeFor(value, n->left);
+        }
+        else if(n->info <= value){
+            getNodeFor(value, n->right);
+        }
+    }
+    else{
+        return NULL;
+    }
 }
 
 // returns true if value is in the tree; false if not
 bool IntBST::contains(int value) const {
-    return true; // REPLACE THIS NON-SOLUTION
+    if(getNodeFor(value, root) != NULL){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 // returns the Node containing the predecessor of the given value
 IntBST::Node* IntBST::getPredecessorNode(int value) const{
-    return NULL; // REPLACE THIS NON-SOLUTION
+    Node* current = getNodeFor(value, root);
+    Node* pred = nullptr;
+    Node* n = root;
+    while(n->left){
+        n = n->left;
+    }
+    if(n->info == value){
+        return pred;
+    }
+    if(current->left){
+        current = current->left;
+        pred = current;
+        while(current->right){
+            current = current->right;
+            pred = current;
+        }
+    }
+    else if(current->parent){
+        while(current->info < current->parent->info && current->parent){
+            current = current->parent;
+            pred = current;
+        }
+        pred = current->parent;
+    }
+    return pred;
 }
 
 // returns the predecessor value of the given value or 0 if there is none
 int IntBST::getPredecessor(int value) const{
-    return 0; // REPLACE THIS NON-SOLUTION
+    if(getPredecessorNode(value)){
+        return getPredecessorNode(value)->info;
+    }
+    else{
+        return 0;
+    }
 }
 
 // returns the Node containing the successor of the given value
 IntBST::Node* IntBST::getSuccessorNode(int value) const{
-    return NULL; // REPLACE THIS NON-SOLUTION
+    Node* current = getNodeFor(value, root);
+    Node* succ = nullptr;
+    Node* n = root;
+    while(n->right){
+        n = n->right;
+    }
+    if(n->info == value){
+        return succ;
+    }
+    if(current->right){
+        current = current->right;
+        succ = current;
+        while(current->left){
+            current = current->left;
+            succ = current;
+        }
+    }
+    else if(current->parent){
+        while(current->info > current->parent->info && current->parent){
+            current = current->parent;
+            succ = current;
+        }
+        succ = current->parent;
+    }
+    return succ;
 }
 
 // returns the successor value of the given value or 0 if there is none
 int IntBST::getSuccessor(int value) const{
-    return 0; // REPLACE THIS NON-SOLUTION
+    if(getSuccessorNode(value)){
+        return getSuccessorNode(value)->info;
+    }
+    else{
+        return 0;
+    }
 }
 
 // deletes the Node containing the given value from the tree
 // returns true if the node exist and was deleted or false if the node does not exist
 bool IntBST::remove(int value){
-    return false; // REPLACE THIS NON-SOLUTION
+    if(contains(value)){
+        Node* current = getNodeFor(value, root);
+        Node* succ = nullptr;
+        if(current->left == nullptr && current->right == nullptr){
+            if(current == root){
+                delete root;
+                root = nullptr;
+            }
+            else{
+                if(current->info < current->parent->info){
+                    current->parent->left = nullptr;
+                }
+                else{
+                    current->parent->right == nullptr;
+                }
+                delete current;
+            }
+        }
+        else if(current->left && current->right){
+            succ = getSuccessorNode(current->info);
+            int succValue = succ->info;
+            remove(succ->info);
+            current->info = succValue;
+        }
+        else if(current->left || current->right){
+            Node* child = current->left;
+            if(current->right != nullptr){
+                child = current->right;
+            }
+            if(current->parent->left == current){
+                current->parent->left = child;
+            }
+            if(current->parent->right == current){
+                current->parent->right = child;
+            }
+            delete current;
+        }
+        return true;
+    }
+    else{
+        return false;
+    }
 }
