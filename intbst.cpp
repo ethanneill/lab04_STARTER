@@ -1,7 +1,7 @@
 // intbst.cpp
 // Implements class IntBST
-// Ethan Neill  Perm #: 4178315
-// Omar Sanchez Perm #: 
+// Ethan Neill
+// Omar Sanchez
 
 #include "intbst.h"
 
