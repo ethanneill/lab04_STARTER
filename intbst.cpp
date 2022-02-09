@@ -256,7 +256,7 @@ bool IntBST::remove(int value){
                     current->parent->left = nullptr;
                 }
                 else{
-                    current->parent->right == nullptr;
+                    current->parent->right = nullptr;
                 }
                 delete current;
             }
