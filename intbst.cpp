@@ -93,8 +93,8 @@ void IntBST::printPostOrder() const {
 
 void IntBST::printPostOrder(Node *n) const {
     if(n){
-        printPostOrder(n->right);
         printPostOrder(n->left);
+        printPostOrder(n->right);
         cout<<n->info<<" ";
     }
 }
